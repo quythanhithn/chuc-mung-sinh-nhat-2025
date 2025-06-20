@@ -63,13 +63,20 @@
       font-weight: bold;
     }
 
-    .message-box {
+    .message-box, .second-message {
       position: absolute;
-      top: 30px;
       width: 100%;
       text-align: center;
       z-index: 10;
       display: none;
+    }
+
+    .message-box {
+      top: 30px;
+    }
+
+    .second-message {
+      bottom: 30px;
     }
 
     .message-box h1 {
@@ -86,7 +93,7 @@
       padding: 1vw 2vw;
       border-radius: 12px;
       display: inline-block;
-      margin-top: 4px;
+      margin-top: 0.5vw;
     }
 
     .typewriter.no-bg {
@@ -107,7 +114,7 @@
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 0 20px #fff;
-      z-index: 5;
+      z-index: 6;
       display: none;
     }
 
@@ -118,20 +125,35 @@
       border-radius: 10px;
       object-fit: cover;
       opacity: 0;
-      animation: fadeIn 1s forwards;
+      transition: all 1s ease;
+      z-index: 4;
     }
 
-    .second-message {
-      position: fixed;
-      bottom: 30px;
-      width: 100%;
-      text-align: center;
-      z-index: 10;
-      display: none;
+    #heart-path {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 7;
+      pointer-events: none;
+      filter: drop-shadow(0 0 10px #e91e63) blur(2px);
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
+    #heart-path path {
+      stroke: #e91e63;
+      stroke-width: 4;
+      fill: none;
+      stroke-dasharray: 3000;
+      stroke-dashoffset: 3000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @keyframes drawHeart {
+      to {
+        stroke-dashoffset: 0;
+      }
     }
 
     @media (max-width: 768px) {
@@ -160,7 +182,6 @@
   <audio id="bgm" loop>
     <source src="music/birthday.mp3" type="audio/mpeg" />
   </audio>
-
   <audio id="type-sound" src="sounds/keypress.mp3" preload="auto"></audio>
 
   <div class="start-container" onclick="openEnvelope(this)">
@@ -186,6 +207,12 @@
     </div>
   </div>
 
+  <svg id="heart-path">
+    <path id="heart-curve" d="" />
+  </svg>
+
+  <canvas id="fireworks" style="position:absolute;top:0;left:0;width:100vw;height:100vh;z-index:8;pointer-events:none;"></canvas>
+
   <script>
     const text = "Hôm nay là ngày đặc biệt, ngày em đến với thế giới này để rồi trở thành thế giới của anh. Cảm ơn em vì đã luôn bên anh. Yêu em rất nhiều! 💕";
     const text2 = "Chúc em một tuổi mới ngập tràn hạnh phúc, yêu thương và luôn mỉm cười thật tươi mỗi ngày! Hãy cùng nhau cố gắng hoàn thiện bản thân thành phiên bản tốt hơn mỗi ngày để cùng đạt được những mục tiêu phía trước nhé vợ 💖";
@@ -193,7 +220,13 @@
     const target2 = document.getElementById("typing-text-2");
     const typeSound = document.getElementById("type-sound");
     const bgm = document.getElementById("bgm");
+    const heartCurve = document.getElementById("heart-curve");
+    const fireworksCanvas = document.getElementById("fireworks");
+    const ctx = fireworksCanvas.getContext("2d");
+    fireworksCanvas.width = window.innerWidth;
+    fireworksCanvas.height = window.innerHeight;
     let index = 0;
+    let orbitImgs = [];
 
     function openEnvelope(el) {
       const flap = el.querySelector(".flap");
@@ -218,16 +251,16 @@
           clearInterval(interval);
           typeSound.pause();
           typeSound.currentTime = 0;
-          showImages();
+          showOrbitImages();
         }
       }, 50);
     }
 
-    function showImages() {
+    function showOrbitImages() {
       const centerImg = document.querySelector('.center-img');
       centerImg.style.display = 'block';
 
-      const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg'];
+      const images = Array.from({ length: 10 }, (_, i) => `img${i + 1}.jpg`);
       const center = centerImg.getBoundingClientRect();
       const centerX = center.left + center.width / 2;
       const centerY = center.top + center.height / 2;
@@ -235,30 +268,151 @@
 
       images.forEach((filename, i) => {
         const angle = (2 * Math.PI / images.length) * i;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
         const img = document.createElement('img');
         img.src = 'images/' + filename;
         img.className = 'orbit-img';
-        img.style.left = `${centerX + radius * Math.cos(angle) - center.width * 0.32}px`;
-        img.style.top = `${centerY + radius * Math.sin(angle) - center.height * 0.32}px`;
-        img.style.animationDelay = `${i * 1}s`;
+        img.style.left = `${x - center.width * 0.32}px`;
+        img.style.top = `${y - center.width * 0.32}px`;
+        img.style.opacity = '1';
         document.body.appendChild(img);
+        orbitImgs.push(img);
       });
 
       setTimeout(() => {
-        document.querySelector('.second-message').style.display = 'block';
-        typeSound.play().catch(() => {});
-        let j = 0;
-        const interval2 = setInterval(() => {
-          if (j < text2.length) {
-            target2.innerHTML += text2.charAt(j);
-            j++;
-          } else {
-            clearInterval(interval2);
-            typeSound.pause();
-            typeSound.currentTime = 0;
+        orbitImgs.forEach((img, i) => {
+          img.style.left = `${centerX - img.clientWidth / 2}px`;
+          img.style.top = `${centerY - img.clientHeight / 2}px`;
+        });
+        setTimeout(() => startSecondTyping(), 1500);
+      }, 3000);
+    }
+
+    function startSecondTyping() {
+      document.querySelector('.second-message').style.display = 'block';
+      typeSound.play().catch(() => {});
+      let j = 0;
+      const interval2 = setInterval(() => {
+        if (j < text2.length) {
+          target2.innerHTML += text2.charAt(j);
+          j++;
+        } else {
+          clearInterval(interval2);
+          typeSound.pause();
+          typeSound.currentTime = 0;
+          document.querySelector('.message-box').style.display = 'none';
+          document.querySelector('.second-message').style.display = 'none';
+          moveToHeart();
+        }
+      }, 50);
+    }
+
+    function moveToHeart() {
+      // Xóa các ảnh hiện tại
+      orbitImgs.forEach(img => img.remove());
+      orbitImgs = [];
+
+      // Tạo 20 ảnh mới (mỗi ảnh xuất hiện 2 lần)
+      const images = Array.from({ length: 10 }, (_, i) => `img${i + 1}.jpg`);
+      const centerImg = document.querySelector('.center-img');
+      const center = centerImg.getBoundingClientRect();
+      const centerX = center.left + center.width / 2;
+      const centerY = center.top + center.height / 2;
+      const radius = center.width * 0.32;
+
+      // Tạo 20 ảnh từ 10 ảnh gốc, mỗi ảnh xuất hiện 2 lần
+      const imageIndices = Array.from({ length: 10 }, (_, i) => i).flatMap(i => [i, i]);
+      // Xáo trộn ngẫu nhiên
+      for (let i = imageIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [imageIndices[i], imageIndices[j]] = [imageIndices[j], imageIndices[i]];
+      }
+
+      imageIndices.forEach((index, i) => {
+        const img = document.createElement('img');
+        img.src = 'images/' + images[index];
+        img.className = 'orbit-img';
+        img.style.left = `${centerX - center.width * 0.32}px`;
+        img.style.top = `${centerY - center.width * 0.32}px`;
+        img.style.opacity = '1';
+        document.body.appendChild(img);
+        orbitImgs.push(img);
+      });
+
+      const heartCenterX = window.innerWidth / 2;
+      const heartCenterY = window.innerHeight / 2;
+      const scale = Math.min(window.innerWidth, window.innerHeight) / 28;
+      const points = [];
+
+      orbitImgs.forEach((img, i) => {
+        const t = (Math.PI * 2 * i) / 20;
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+        const px = heartCenterX + x * scale;
+        const py = heartCenterY - y * scale;
+        points.push({ x: px, y: py });
+
+        setTimeout(() => {
+          img.style.left = `${px - 4 * scale}px`;
+          img.style.top = `${py - 4 * scale}px`;
+        }, i * 150);
+      });
+
+      setTimeout(() => {
+        let d = `M ${points[0].x},${points[0].y}`;
+        for (let i = 1; i < points.length; i++) {
+          const p1 = points[i - 1];
+          const p2 = points[i];
+          const midX = (p1.x + p2.x) / 2;
+          const midY = (p1.y + p2.y) / 2;
+          d += ` Q ${p1.x},${p1.y} ${midX},${midY}`;
+        }
+        d += ` Q ${points[points.length - 1].x},${points[points.length - 1].y} ${points[0].x},${points[0].y}`;
+        heartCurve.setAttribute('d', d);
+        heartCurve.style.animation = 'drawHeart 3s ease forwards';
+        triggerFireworks();
+      }, orbitImgs.length * 150 + 300);
+    }
+
+    function triggerFireworks() {
+      let particles = [];
+      function createParticle() {
+        const x = Math.random() * fireworksCanvas.width;
+        const y = Math.random() * fireworksCanvas.height / 2;
+        for (let i = 0; i < 30; i++) {
+          const angle = Math.random() * 2 * Math.PI;
+          const speed = Math.random() * 5 + 2;
+          particles.push({
+            x,
+            y,
+            dx: Math.cos(angle) * speed,
+            dy: Math.sin(angle) * speed,
+            alpha: 1
+          });
+        }
+      }
+
+      setInterval(createParticle, 500);
+
+      function animate() {
+        ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+        particles.forEach((p, i) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.alpha -= 0.02;
+          if (p.alpha <= 0) particles.splice(i, 1);
+          else {
+            ctx.fillStyle = `rgba(255,105,180,${p.alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
+            ctx.fill();
           }
-        }, 50);
-      }, images.length * 300 + 500);
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
     }
   </script>
 </body>
