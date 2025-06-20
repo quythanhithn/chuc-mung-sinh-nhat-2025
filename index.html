@@ -9,7 +9,7 @@
       margin: 0;
       background: #ffc0cb;
       font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .start-container {
@@ -23,8 +23,8 @@
 
     .envelope {
       position: relative;
-      width: 140px;
-      height: 100px;
+      width: 30vw;
+      height: 22vw;
       margin: 0 auto;
       cursor: pointer;
       transform-style: preserve-3d;
@@ -32,8 +32,8 @@
     }
 
     .envelope .flap {
-      width: 140px;
-      height: 50px;
+      width: 30vw;
+      height: 11vw;
       background: #e91e63;
       position: absolute;
       top: 0;
@@ -44,12 +44,12 @@
     }
 
     .envelope .body {
-      width: 140px;
-      height: 100px;
+      width: 30vw;
+      height: 22vw;
       background: white;
       text-align: center;
-      font-size: 48px;
-      line-height: 100px;
+      font-size: 6vw;
+      line-height: 22vw;
       border: 3px solid #e91e63;
       border-radius: 6px;
       position: relative;
@@ -57,15 +57,15 @@
     }
 
     .click-text {
-      font-size: 18px;
-      margin-top: 12px;
+      font-size: 4vw;
+      margin-top: 2vw;
       color: #b30047;
       font-weight: bold;
     }
 
     .message-box {
       position: absolute;
-      top: 30px;
+      top: 5vw;
       width: 100%;
       text-align: center;
       z-index: 10;
@@ -73,35 +73,35 @@
     }
 
     .message-box h1 {
-      font-size: 36px;
+      font-size: 5vw;
       color: #e91e63;
-      margin-bottom: 10px;
+      margin-bottom: 2vw;
       text-shadow: 1px 1px 3px white;
     }
 
     .typewriter {
-      font-size: 20px;
+      font-size: 3.5vw;
       color: white;
       background: rgba(255, 105, 180, 0.5);
-      padding: 10px 20px;
+      padding: 2vw 4vw;
       border-radius: 12px;
       display: inline-block;
-      margin-top: 10px;
+      margin-top: 1vw;
     }
 
     .typewriter.no-bg {
       background: none;
-      font-weight: bold;       /* Chữ đậm */
-      font-size: 22px;         /* Cỡ chữ to hơn */
-      color: #e91e63
+      font-weight: bold;
+      font-size: 3.5vw;
+      color: #e91e63;
     }
 
     .center-img {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 200px;
-      height: 200px;
+      width: 25vw;
+      height: 25vw;
       transform: translate(-50%, -50%);
       border-radius: 50%;
       object-fit: cover;
@@ -112,8 +112,6 @@
 
     .orbit-img {
       position: absolute;
-      width: 120px;
-      height: 120px;
       border-radius: 10px;
       object-fit: cover;
       opacity: 0;
@@ -122,7 +120,7 @@
 
     .second-message {
       position: fixed;
-      bottom: 30px;
+      bottom: 4vw;
       width: 100%;
       text-align: center;
       z-index: 10;
@@ -131,6 +129,20 @@
 
     @keyframes fadeIn {
       to { opacity: 1; }
+    }
+
+    @media (min-width: 768px) {
+      .message-box h1 {
+        font-size: 28px;
+      }
+
+      .typewriter, .typewriter.no-bg {
+        font-size: 20px;
+      }
+
+      .click-text {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -173,6 +185,7 @@
   <script>
     const text = "Hôm nay là ngày đặc biệt, ngày em đến với thế giới này để rồi trở thành thế giới của anh. Cảm ơn em vì đã luôn bên anh. Yêu em rất nhiều! 💕";
     const text2 = "Chúc em một tuổi mới ngập tràn hạnh phúc, yêu thương và luôn mỉm cười thật tươi mỗi ngày! Hãy cùng nhau cố gắng hoàn thiện bản thân thành phiên bản tốt hơn mỗi ngày để cùng đạt được những mục tiêu phía trước nhé vợ 💖";
+
     const target = document.getElementById("typing-text");
     const target2 = document.getElementById("typing-text-2");
     const typeSound = document.getElementById("type-sound");
@@ -214,22 +227,24 @@
       const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg'];
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      const radius = 160;
+      const radius = window.innerWidth * 0.25;
+      const orbitSize = window.innerWidth * 0.075;
 
       images.forEach((filename, i) => {
         const angle = (2 * Math.PI / images.length) * i;
-        const x = centerX + radius * Math.cos(angle) - 60;
-        const y = centerY + radius * Math.sin(angle) - 60;
+        const x = centerX + radius * Math.cos(angle) - orbitSize;
+        const y = centerY + radius * Math.sin(angle) - orbitSize;
         const img = document.createElement('img');
         img.src = 'images/' + filename;
         img.className = 'orbit-img';
         img.style.left = `${x}px`;
         img.style.top = `${y}px`;
+        img.style.width = img.style.height = `${orbitSize * 2}px`;
         img.style.animationDelay = `${i * 1}s`;
         document.body.appendChild(img);
       });
 
-      // Hiện lời chúc thứ hai sau khi ảnh hiện hết
+      // Hiện lời chúc thứ hai
       setTimeout(() => {
         document.querySelector('.second-message').style.display = 'block';
         typeSound.play().catch(() => {});
