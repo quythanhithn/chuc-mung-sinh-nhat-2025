@@ -198,6 +198,7 @@
     function openEnvelope(el) {
       const flap = el.querySelector(".flap");
       flap.style.transform = "rotateX(-120deg)";
+      bgm.play().catch(() => {});
       setTimeout(() => {
         el.style.display = "none";
         startTyping();
@@ -218,7 +219,6 @@
           typeSound.pause();
           typeSound.currentTime = 0;
           showImages();
-          bgm.play().catch(() => {});
         }
       }, 50);
     }
