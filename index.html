@@ -189,7 +189,7 @@
       <div class="flap"></div>
       <div class="body">💌</div>
     </div>
-    <p class="click-text">Click để mở thư chúc mừng</p>
+    <p class="click-text">Click để mở thư chúc mừng nhé ^💖^</p>
   </div>
 
   <div class="message-box">
@@ -199,7 +199,7 @@
     </div>
   </div>
 
-  <img src="images/happywife.jpg" class="center-img" alt="Vợ yêu" />
+  <img src="./images/happywife.jpg" class="center-img" alt="Vợ yêu" />
 
   <div class="second-message">
     <div class="typewriter">
@@ -272,13 +272,19 @@
         const y = centerY + radius * Math.sin(angle);
 
         const img = document.createElement('img');
-        img.src = 'images/' + filename;
+        img.src = `./images/${filename}`;
         img.className = 'orbit-img';
         img.style.left = `${x - center.width * 0.32}px`;
         img.style.top = `${y - center.width * 0.32}px`;
-        img.style.opacity = '1';
+        img.style.opacity = '0';
+        img.onerror = () => console.error(`Failed to load image: ${img.src}`);
         document.body.appendChild(img);
         orbitImgs.push(img);
+
+        // Hiển thị ảnh lần lượt với khoảng cách thời gian 300ms
+        setTimeout(() => {
+          img.style.opacity = '1';
+        }, i * 300);
       });
 
       setTimeout(() => {
@@ -287,7 +293,7 @@
           img.style.top = `${centerY - img.clientHeight / 2}px`;
         });
         setTimeout(() => startSecondTyping(), 1500);
-      }, 3000);
+      }, images.length * 300 + 1000); // Chờ thêm 1 giây sau khi tất cả ảnh xuất hiện
     }
 
     function startSecondTyping() {
@@ -332,18 +338,19 @@
 
       imageIndices.forEach((index, i) => {
         const img = document.createElement('img');
-        img.src = 'images/' + images[index];
+        img.src = `./images/${images[index]}`;
         img.className = 'orbit-img';
         img.style.left = `${centerX - center.width * 0.32}px`;
         img.style.top = `${centerY - center.width * 0.32}px`;
         img.style.opacity = '1';
+        img.onerror = () => console.error(`Failed to load image: ${img.src}`);
         document.body.appendChild(img);
         orbitImgs.push(img);
       });
 
       const heartCenterX = window.innerWidth / 2;
       const heartCenterY = window.innerHeight / 2;
-      const scale = Math.min(window.innerWidth, window.innerHeight) / 28;
+      const scale = Math.min(window.innerWidth, window.innerHeight) / 38;
       const points = [];
 
       orbitImgs.forEach((img, i) => {
