@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chúc mừng sinh nhật vợ yêu 💖</title>
+  <style>
+    body {
+      margin: 0;
+      background: #ffc0cb;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .start-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 100;
+    }
+
+    .envelope {
+      position: relative;
+      width: 140px;
+      height: 100px;
+      margin: 0 auto;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      perspective: 600px;
+    }
+
+    .envelope .flap {
+      width: 140px;
+      height: 50px;
+      background: #e91e63;
+      position: absolute;
+      top: 0;
+      transform-origin: top;
+      transition: transform 0.6s ease;
+      border-radius: 6px 6px 0 0;
+      z-index: 2;
+    }
+
+    .envelope .body {
+      width: 140px;
+      height: 100px;
+      background: white;
+      text-align: center;
+      font-size: 48px;
+      line-height: 100px;
+      border: 3px solid #e91e63;
+      border-radius: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .click-text {
+      font-size: 18px;
+      margin-top: 12px;
+      color: #b30047;
+      font-weight: bold;
+    }
+
+    .message-box {
+      position: absolute;
+      top: 30px;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+      display: none;
+    }
+
+    .message-box h1 {
+      font-size: 36px;
+      color: #e91e63;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 3px white;
+    }
+
+    .typewriter {
+      font-size: 20px;
+      color: white;
+      background: rgba(255, 105, 180, 0.5);
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .typewriter.no-bg {
+      background: none;
+      font-weight: bold;       /* Chữ đậm */
+      font-size: 22px;         /* Cỡ chữ to hơn */
+      color: #e91e63
+    }
+
+    .center-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 20px #fff;
+      z-index: 5;
+      display: none;
+    }
+
+    .orbit-img {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      object-fit: cover;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    .second-message {
+      position: fixed;
+      bottom: 30px;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Nhạc nền -->
+  <audio id="bgm" loop>
+    <source src="music/birthday.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Âm thanh gõ phím -->
+  <audio id="type-sound" src="sounds/keypress.mp3" preload="auto"></audio>
+
+  <!-- Hộp thư mở đầu -->
+  <div class="start-container" onclick="openEnvelope(this)">
+    <div class="envelope">
+      <div class="flap"></div>
+      <div class="body">💌</div>
+    </div>
+    <p class="click-text">Click để mở thư chúc mừng</p>
+  </div>
+
+  <!-- Lời chúc đầu -->
+  <div class="message-box">
+    <h1>🎉 Chúc mừng sinh nhật vợ yêu của anh! 🎂</h1>
+    <div class="typewriter no-bg">
+      <p id="typing-text"></p>
+    </div>
+  </div>
+
+  <!-- Ảnh chính giữa -->
+  <img src="images/happywife.jpg" class="center-img" alt="Vợ yêu" />
+
+  <!-- Lời chúc thứ hai -->
+  <div class="second-message">
+    <div class="typewriter">
+      <p id="typing-text-2"></p>
+    </div>
+  </div>
+
+  <script>
+    const text = "Hôm nay là ngày đặc biệt, ngày em đến với thế giới này để rồi trở thành thế giới của anh. Cảm ơn em vì đã luôn bên anh. Yêu em rất nhiều! 💕";
+    const text2 = "Chúc em một tuổi mới ngập tràn hạnh phúc, yêu thương và luôn mỉm cười thật tươi mỗi ngày! Hãy cùng nhau cố gắng hoàn thiện bản thân thành phiên bản tốt hơn mỗi ngày để cùng đạt được những mục tiêu phía trước nhé vợ 💖";
+    const target = document.getElementById("typing-text");
+    const target2 = document.getElementById("typing-text-2");
+    const typeSound = document.getElementById("type-sound");
+    const bgm = document.getElementById("bgm");
+    let index = 0;
+
+    function openEnvelope(el) {
+      const flap = el.querySelector(".flap");
+      flap.style.transform = "rotateX(-120deg)";
+      setTimeout(() => {
+        el.style.display = "none";
+        startTyping();
+      }, 800);
+    }
+
+    function startTyping() {
+      document.querySelector(".message-box").style.display = "block";
+      typeSound.loop = true;
+      typeSound.play().catch(() => {});
+
+      const interval = setInterval(() => {
+        if (index < text.length) {
+          target.innerHTML += text.charAt(index);
+          index++;
+        } else {
+          clearInterval(interval);
+          typeSound.pause();
+          typeSound.currentTime = 0;
+          showImages();
+          bgm.play().catch(() => {});
+        }
+      }, 50);
+    }
+
+    function showImages() {
+      const centerImg = document.querySelector('.center-img');
+      centerImg.style.display = 'block';
+
+      const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg'];
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const radius = 160;
+
+      images.forEach((filename, i) => {
+        const angle = (2 * Math.PI / images.length) * i;
+        const x = centerX + radius * Math.cos(angle) - 60;
+        const y = centerY + radius * Math.sin(angle) - 60;
+        const img = document.createElement('img');
+        img.src = 'images/' + filename;
+        img.className = 'orbit-img';
+        img.style.left = `${x}px`;
+        img.style.top = `${y}px`;
+        img.style.animationDelay = `${i * 1}s`;
+        document.body.appendChild(img);
+      });
+
+      // Hiện lời chúc thứ hai sau khi ảnh hiện hết
+      setTimeout(() => {
+        document.querySelector('.second-message').style.display = 'block';
+        typeSound.play().catch(() => {});
+        let j = 0;
+        const interval2 = setInterval(() => {
+          if (j < text2.length) {
+            target2.innerHTML += text2.charAt(j);
+            j++;
+          } else {
+            clearInterval(interval2);
+            typeSound.pause();
+            typeSound.currentTime = 0;
+          }
+        }, 50);
+      }, images.length * 300 + 500);
+    }
+  </script>
+</body>
+</html>
