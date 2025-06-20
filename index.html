@@ -75,7 +75,7 @@
     .message-box h1 {
       font-size: 2.5vw;
       color: #e91e63;
-      margin-bottom: 10px;
+      margin-bottom: 1px;
       text-shadow: 1px 1px 3px white;
     }
 
@@ -86,7 +86,7 @@
       padding: 1vw 2vw;
       border-radius: 12px;
       display: inline-block;
-      margin-top: 10px;
+      margin-top: 4px;
     }
 
     .typewriter.no-bg {
@@ -94,6 +94,7 @@
       font-weight: bold;
       font-size: 1.4vw;
       color: #e91e63;
+      margin-top: -2vw;
     }
 
     .center-img {
@@ -141,6 +142,9 @@
         font-size: 4vw;
         padding: 2vw;
       }
+      .typewriter.no-bg {
+        margin-top: -1vw;
+      }
       .center-img {
         width: 40vw;
         height: 40vw;
@@ -168,7 +172,7 @@
   </div>
 
   <div class="message-box">
-    <h1>🎉 Chúc mừng sinh nhật vợ yêu của anh! 🎂</h1>
+    <h1>🎂Chúc mừng sinh nhật vợ yêu💌</h1>
     <div class="typewriter no-bg">
       <p id="typing-text"></p>
     </div>
@@ -224,19 +228,18 @@
       centerImg.style.display = 'block';
 
       const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg'];
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      const radius = Math.min(window.innerWidth, window.innerHeight) * 0.2; // giảm bán kính để ảnh nhỏ gần hơn
+      const center = centerImg.getBoundingClientRect();
+      const centerX = center.left + center.width / 2;
+      const centerY = center.top + center.height / 2;
+      const radius = center.width * 1.05;
 
       images.forEach((filename, i) => {
         const angle = (2 * Math.PI / images.length) * i;
-        const x = centerX + radius * Math.cos(angle) - (window.innerWidth * 0.04);
-        const y = centerY + radius * Math.sin(angle) - (window.innerWidth * 0.04);
         const img = document.createElement('img');
         img.src = 'images/' + filename;
         img.className = 'orbit-img';
-        img.style.left = `${x}px`;
-        img.style.top = `${y}px`;
+        img.style.left = `${centerX + radius * Math.cos(angle) - center.width * 0.32}px`;
+        img.style.top = `${centerY + radius * Math.sin(angle) - center.height * 0.32}px`;
         img.style.animationDelay = `${i * 1}s`;
         document.body.appendChild(img);
       });
