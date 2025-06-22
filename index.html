@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chúc mừng sinh nhật vợ yêu 💖</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -85,12 +85,12 @@
     }
 
     .couple-text h1 {
-      font-size: 2.5vw;
+      font-size: 3.5vw; /* Increased font size for prominence */
       color: #e91e63;
       text-shadow: 1px 1px 3px white;
       margin: 0;
-      font-family: 'Dancing Script', cursive;
-      font-weight: 700;
+      font-family: 'Great Vibes', cursive;
+      font-weight: 400; /* Great Vibes is inherently bold, so 400 is sufficient */
     }
 
     .message-box h1 {
@@ -171,14 +171,18 @@
     }
 
     @media (max-width: 768px) {
-      .message-box h1, .couple-text h1 {
+      .message-box h1 {
         font-size: 6vw;
+      }
+      .couple-text h1 {
+        font-size: 8vw; /* Larger size for mobile */
       }
       .typewriter, .typewriter.no-bg {
         font-size: 4vw;
         padding: 2vw;
       }
       .typewriter.no-bg {
+        font-size: 4vw;
         margin-top: -1vw;
       }
       .center-img {
@@ -203,7 +207,7 @@
       <div class="flap"></div>
       <div class="body">💌</div>
     </div>
-    <p class="click-text">Click để mở thư chúc mừng nhé 💓</p>
+    <p class="click-text">Click để mở thư chúc mừng nhé 💞</p>
   </div>
 
   <div class="message-box">
@@ -400,7 +404,7 @@
           setTimeout(() => {
             coupleText.style.opacity = '1';
           }, 100);
-        }, 3000); // Wait for heart animation to complete
+        }, 3000);
         triggerFireworks();
       }, orbitImgs.length * 150 + 300);
     }
