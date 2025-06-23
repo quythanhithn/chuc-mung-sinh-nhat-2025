@@ -85,12 +85,12 @@
     }
 
     .couple-text h1 {
-      font-size: 3.5vw; /* Increased font size for prominence */
+      font-size: 3.5vw;
       color: #e91e63;
       text-shadow: 1px 1px 3px white;
       margin: 0;
       font-family: 'Great Vibes', cursive;
-      font-weight: 400; /* Great Vibes is inherently bold, so 400 is sufficient */
+      font-weight: 400;
     }
 
     .message-box h1 {
@@ -143,6 +143,20 @@
       z-index: 4;
     }
 
+    .orbit-img.focus-enabled:hover {
+      transform: scale(1.5);
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(233, 30, 99, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .center-img.focus-enabled:hover {
+      transform: scale(1.5) translate(-50%, -50%);
+      z-index: 7;
+      box-shadow: 0 0 15px rgba(233, 30, 99, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
     #heart-path {
       position: absolute;
       top: 0;
@@ -175,7 +189,7 @@
         font-size: 6vw;
       }
       .couple-text h1 {
-        font-size: 8vw; /* Larger size for mobile */
+        font-size: 8vw;
       }
       .typewriter, .typewriter.no-bg {
         font-size: 4vw;
@@ -192,6 +206,12 @@
       .orbit-img {
         width: 25vw;
         height: 25vw;
+      }
+      .orbit-img.focus-enabled:hover {
+        transform: scale(1.4);
+      }
+      .center-img.focus-enabled:hover {
+        transform: scale(1.4) translate(-50%, -50%);
       }
     }
   </style>
@@ -403,6 +423,8 @@
           coupleText.style.transition = 'opacity 1s ease';
           setTimeout(() => {
             coupleText.style.opacity = '1';
+            orbitImgs.forEach(img => img.classList.add('focus-enabled'));
+            centerImg.classList.add('focus-enabled');
           }, 100);
         }, 3000);
         triggerFireworks();
