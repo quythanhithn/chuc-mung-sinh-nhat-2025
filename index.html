@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chúc mừng sinh nhật vợ yêu 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -63,7 +64,7 @@
       font-weight: bold;
     }
 
-    .message-box, .second-message {
+    .message-box, .second-message, .couple-text {
       position: absolute;
       width: 100%;
       text-align: center;
@@ -77,6 +78,19 @@
 
     .second-message {
       bottom: 30px;
+    }
+
+    .couple-text {
+      top: 20px;
+    }
+
+    .couple-text h1 {
+      font-size: 3.5vw;
+      color: #e91e63;
+      text-shadow: 1px 1px 3px white;
+      margin: 0;
+      font-family: 'Great Vibes', cursive;
+      font-weight: 400;
     }
 
     .message-box h1 {
@@ -129,6 +143,20 @@
       z-index: 4;
     }
 
+    .orbit-img.focus-enabled:hover {
+      transform: scale(1.5);
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(233, 30, 99, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .center-img.focus-enabled:hover {
+      transform: scale(1.5) translate(-50%, -50%);
+      z-index: 7;
+      box-shadow: 0 0 15px rgba(233, 30, 99, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
     #heart-path {
       position: absolute;
       top: 0;
@@ -160,11 +188,15 @@
       .message-box h1 {
         font-size: 6vw;
       }
+      .couple-text h1 {
+        font-size: 8vw;
+      }
       .typewriter, .typewriter.no-bg {
         font-size: 4vw;
         padding: 2vw;
       }
       .typewriter.no-bg {
+        font-size: 4vw;
         margin-top: -1vw;
       }
       .center-img {
@@ -174,6 +206,12 @@
       .orbit-img {
         width: 25vw;
         height: 25vw;
+      }
+      .orbit-img.focus-enabled:hover {
+        transform: scale(1.4);
+      }
+      .center-img.focus-enabled:hover {
+        transform: scale(1.4) translate(-50%, -50%);
       }
     }
   </style>
@@ -189,7 +227,7 @@
       <div class="flap"></div>
       <div class="body">💌</div>
     </div>
-    <p class="click-text">Click để mở thư chúc mừng nhé ^💖^</p>
+    <p class="click-text">Click để mở thư chúc mừng nhé 💞</p>
   </div>
 
   <div class="message-box">
@@ -197,6 +235,10 @@
     <div class="typewriter no-bg">
       <p id="typing-text"></p>
     </div>
+  </div>
+
+  <div class="couple-text">
+    <h1>Quý Thanh 💗 Mỹ Linh</h1>
   </div>
 
   <img src="./images/happywife.jpg" class="center-img" alt="Vợ yêu" />
@@ -281,7 +323,6 @@
         document.body.appendChild(img);
         orbitImgs.push(img);
 
-        // Hiển thị ảnh lần lượt với khoảng cách thời gian 300ms
         setTimeout(() => {
           img.style.opacity = '1';
         }, i * 300);
@@ -293,7 +334,7 @@
           img.style.top = `${centerY - img.clientHeight / 2}px`;
         });
         setTimeout(() => startSecondTyping(), 1500);
-      }, images.length * 300 + 1000); // Chờ thêm 1 giây sau khi tất cả ảnh xuất hiện
+      }, images.length * 300 + 1000);
     }
 
     function startSecondTyping() {
@@ -316,11 +357,9 @@
     }
 
     function moveToHeart() {
-      // Xóa các ảnh hiện tại
       orbitImgs.forEach(img => img.remove());
       orbitImgs = [];
 
-      // Tạo 20 ảnh mới (mỗi ảnh xuất hiện 2 lần)
       const images = Array.from({ length: 10 }, (_, i) => `img${i + 1}.jpg`);
       const centerImg = document.querySelector('.center-img');
       const center = centerImg.getBoundingClientRect();
@@ -328,9 +367,7 @@
       const centerY = center.top + center.height / 2;
       const radius = center.width * 0.32;
 
-      // Tạo 20 ảnh từ 10 ảnh gốc, mỗi ảnh xuất hiện 2 lần
       const imageIndices = Array.from({ length: 10 }, (_, i) => i).flatMap(i => [i, i]);
-      // Xáo trộn ngẫu nhiên
       for (let i = imageIndices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [imageIndices[i], imageIndices[j]] = [imageIndices[j], imageIndices[i]];
@@ -362,8 +399,8 @@
         points.push({ x: px, y: py });
 
         setTimeout(() => {
-          img.style.left = `${px - 4 * scale}px`;
-          img.style.top = `${py - 4 * scale}px`;
+          img.style.left = `${px - img.clientWidth / 2}px`;
+          img.style.top = `${py - img.clientHeight / 2}px`;
         }, i * 150);
       });
 
@@ -379,6 +416,17 @@
         d += ` Q ${points[points.length - 1].x},${points[points.length - 1].y} ${points[0].x},${points[0].y}`;
         heartCurve.setAttribute('d', d);
         heartCurve.style.animation = 'drawHeart 3s ease forwards';
+        setTimeout(() => {
+          const coupleText = document.querySelector('.couple-text');
+          coupleText.style.display = 'block';
+          coupleText.style.opacity = '0';
+          coupleText.style.transition = 'opacity 1s ease';
+          setTimeout(() => {
+            coupleText.style.opacity = '1';
+            orbitImgs.forEach(img => img.classList.add('focus-enabled'));
+            centerImg.classList.add('focus-enabled');
+          }, 100);
+        }, 3000);
         triggerFireworks();
       }, orbitImgs.length * 150 + 300);
     }
