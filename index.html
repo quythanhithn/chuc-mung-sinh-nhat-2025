@@ -184,6 +184,74 @@
       }
     }
 
+    .lucky-wheel-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+      display: none;
+    }
+
+    .wheel {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      border: 5px solid #e91e63;
+      background: #fff;
+      transform: rotate(0deg);
+      transition: transform 4s ease-out;
+    }
+
+    .wheel-segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+      transform-origin: 100% 100%;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .spin-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .spin-button:hover {
+      background: #b30047;
+    }
+
+    .spin-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .result-text {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #e91e63;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px white;
+    }
+
     @media (max-width: 768px) {
       .message-box h1 {
         font-size: 6vw;
@@ -212,6 +280,13 @@
       }
       .center-img.focus-enabled:hover {
         transform: scale(1.4) translate(-50%, -50%);
+      }
+      .wheel {
+        width: 250px;
+        height: 250px;
+      }
+      .wheel-segment {
+        font-size: 12px;
       }
     }
   </style>
@@ -254,6 +329,12 @@
   </svg>
 
   <canvas id="fireworks" style="position:absolute;top:0;left:0;width:100vw;height:100vh;z-index:8;pointer-events:none;"></canvas>
+
+  <div class="lucky-wheel-container">
+    <div class="wheel" id="lucky-wheel"></div>
+    <button class="spin-button" onclick="spinWheel()">Quay Lì Xì</button>
+    <div class="result-text" id="result-text"></div>
+  </div>
 
   <script>
     const text = "Hôm nay là ngày đặc biệt, ngày em đến với thế giới này để rồi trở thành thế giới của anh. Cảm ơn em vì đã luôn bên anh. Yêu em rất nhiều! 💕";
@@ -346,16 +427,15 @@
           target2.innerHTML += text2.charAt(j);
           j++;
         } else {
-clearInterval(interval2);
-typeSound.pause();
-typeSound.currentTime = 0;
+          clearInterval(interval2);
+          typeSound.pause();
+          typeSound.currentTime = 0;
 
-// ⏳ Delay 3 giây để người xem đọc lời chúc
-setTimeout(() => {
-  document.querySelector('.message-box').style.display = 'none';
-  document.querySelector('.second-message').style.display = 'none';
-  moveToHeart();
-}, 3000);
+          setTimeout(() => {
+            document.querySelector('.message-box').style.display = 'none';
+            document.querySelector('.second-message').style.display = 'none';
+            moveToHeart();
+          }, 3000);
         }
       }, 50);
     }
@@ -422,6 +502,7 @@ setTimeout(() => {
             coupleText.style.opacity = '1';
             orbitImgs.forEach(img => img.classList.add('focus-enabled'));
             centerImg.classList.add('focus-enabled');
+            setTimeout(showLuckyWheel, 2000);
           }, 100);
         }, 3000);
         triggerFireworks();
@@ -465,6 +546,82 @@ setTimeout(() => {
         requestAnimationFrame(animate);
       }
       animate();
+    }
+
+    function showLuckyWheel() {
+      const wheelContainer = document.querySelector('.lucky-wheel-container');
+      wheelContainer.style.display = 'block';
+      initializeWheel();
+    }
+
+    function initializeWheel() {
+      const wheel = document.getElementById('lucky-wheel');
+      const segments = [
+        'Chuyến du lịch cùng anh 💕',
+        'Bữa tối lãng mạn 🕯️',
+        'Một ngày spa thư giãn 🧘‍♀️',
+        'Món quà bất ngờ 🎁',
+        'Buổi xem phim yêu thích 🎬',
+        'Cái ôm thật chặt 🤗',
+        'Bó hoa tươi thắm 💐',
+        'Bánh ngọt homemade 🧁'
+      ];
+      const colors = ['#ff69b4', '#ff1493', '#c71585', '#db7093', '#ff4500', '#ff6347', '#ff7f50', '#dc143c'];
+
+      segments.forEach((text, i) => {
+        const segment = document.createElement('div');
+        segment.className = 'wheel-segment';
+        segment.style.background = colors[i];
+        segment.style.transform = `rotate(${i * 45}deg)`;
+        segment.innerText = text;
+        wheel.appendChild(segment);
+      });
+    }
+
+    let isSpinning = false;
+    function spinWheel() {
+      if (isSpinning) return;
+      isSpinning = true;
+      const wheel = document.getElementById('lucky-wheel');
+      const resultText = document.getElementById('result-text');
+      const spinButton = document.querySelector('.spin-button');
+      spinButton.disabled = true;
+      resultText.innerText = '';
+
+      const segments = [
+        'Chuyến du lịch cùng anh 💕',
+        'Bữa tối lãng mạn 🕯️',
+        'Ting ting 1 củ 💲',
+        'Món quà bất ngờ 🎁',
+        'Buổi xem phim yêu thích 🎬',
+        'Cái ôm thật chặt 🤗',
+        'Ting ting 2 củ 💲💲',
+        'Trả bài 2 slot 🧁'
+      ];
+      const randomIndex = Math.floor(Math.random() * segments.length);
+      const rotation = 360 * 5 + randomIndex * 45 + Math.random() * 45;
+
+      wheel.style.transition = 'transform 4s ease-out';
+      wheel.style.transform = `rotate(${rotation}deg)`;
+
+      setTimeout(() => {
+        isSpinning = false;
+        spinButton.disabled = false;
+        resultText.innerText = `Chúc mừng! Em nhận được: ${segments[randomIndex]}`;
+// Gửi kết quả lên Google Sheet
+fetch("https://script.google.com/macros/s/AKfycbx7DyOV7eF6MXtAZiqk265_GwSXYYRbwhidGP7e9q0Noa2gNswQEFc8TxsP__GfwbV7/exec", {
+  method: "POST",
+  body: JSON.stringify({
+    result: `Người nhận đã quay được: ${segments[randomIndex]}`
+  }),
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
+.then(response => response.json())
+.then(data => console.log("Kết quả đã ghi vào Google Sheet:", data))
+.catch(error => console.error("Lỗi gửi dữ liệu:", error));
+      }, 4000);
     }
   </script>
 </body>
