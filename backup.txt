@@ -346,16 +346,12 @@
           target2.innerHTML += text2.charAt(j);
           j++;
         } else {
-clearInterval(interval2);
-typeSound.pause();
-typeSound.currentTime = 0;
-
-// ⏳ Delay 3 giây để người xem đọc lời chúc
-setTimeout(() => {
-  document.querySelector('.message-box').style.display = 'none';
-  document.querySelector('.second-message').style.display = 'none';
-  moveToHeart();
-}, 3000);
+          clearInterval(interval2);
+          typeSound.pause();
+          typeSound.currentTime = 0;
+          document.querySelector('.message-box').style.display = 'none';
+          document.querySelector('.second-message').style.display = 'none';
+          moveToHeart();
         }
       }, 50);
     }
