@@ -360,22 +360,15 @@
       orbitImgs.forEach(img => img.remove());
       orbitImgs = [];
 
-      const images = Array.from({ length: 10 }, (_, i) => `img${i + 1}.jpg`);
+      const images = Array.from({ length: 20 }, (_, i) => `img${i + 1}.jpg`);
       const centerImg = document.querySelector('.center-img');
       const center = centerImg.getBoundingClientRect();
       const centerX = center.left + center.width / 2;
       const centerY = center.top + center.height / 2;
-      const radius = center.width * 0.32;
 
-      const imageIndices = Array.from({ length: 10 }, (_, i) => i).flatMap(i => [i, i]);
-      for (let i = imageIndices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [imageIndices[i], imageIndices[j]] = [imageIndices[j], imageIndices[i]];
-      }
-
-      imageIndices.forEach((index, i) => {
+      images.forEach((filename, i) => {
         const img = document.createElement('img');
-        img.src = `./images/${images[index]}`;
+        img.src = `./images/${filename}`;
         img.className = 'orbit-img';
         img.style.left = `${centerX - center.width * 0.32}px`;
         img.style.top = `${centerY - center.width * 0.32}px`;
